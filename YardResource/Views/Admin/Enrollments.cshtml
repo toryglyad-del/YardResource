@@ -1,0 +1,120 @@
+﻿@model IEnumerable<YardResource.Models.Enrollment>
+@{
+    ViewData["Title"] = "Записи на курсы";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Записи — ООО Ярд Ресурс</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { width: 260px; min-height: 100vh; background: #0f3460; position: fixed; top: 0; left: 0; }
+        .sidebar .logo { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .logo h5 { color: white; font-weight: 700; margin: 0; font-size: 1rem; }
+        .sidebar .logo p { color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0; }
+        .sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 20px; font-size: 0.9rem; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .topbar { background: white; padding: 16px 30px; margin: -30px -30px 30px -30px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo">
+        <h5>ООО «Ярд Ресурс»</h5>
+        <p>Панель администратора</p>
+    </div>
+    <nav class="mt-2">
+        <a href="/Admin/Index" class="nav-link"><i class="bi bi-speedometer2"></i> Дашборд</a>
+        <a href="/Admin/Users" class="nav-link"><i class="bi bi-people"></i> Сотрудники</a>
+        <a href="/Admin/Courses" class="nav-link"><i class="bi bi-book"></i> Курсы</a>
+        <a href="/Admin/Enrollments" class="nav-link active"><i class="bi bi-journal-check"></i> Записи на курсы</a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 20px;" />
+        <a href="/Account/Logout" class="nav-link"><i class="bi bi-box-arrow-left"></i> Выйти</a>
+    </nav>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h5 class="mb-0 fw-bold">Записи на курсы</h5>
+        <span class="text-muted">Всего: @Model.Count()</span>
+    </div>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Сотрудник</th>
+                        <th>Курс</th>
+                        <th>Дата записи</th>
+                        <th>Статус</th>
+                        <th>Сертификат</th>
+                        <th>Изменить статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-semibold">@e.User?.FullName</div>
+                            <small class="text-muted">@e.User?.Email</small>
+                        </td>
+                        <td>@e.Course?.Title</td>
+                        <td>@e.EnrolledAt.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            @if (e.Status == "Завершён")
+                            {
+                                <span class="badge bg-success">@e.Status</span>
+                            }
+                            else if (e.Status == "Отменён")
+                            {
+                                <span class="badge bg-danger">@e.Status</span>
+                            }
+                            else if (e.Status == "В процессе")
+                            {
+                                <span class="badge bg-warning text-dark">@e.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary">@e.Status</span>
+                            }
+                        </td>
+                        <td>@(e.CertificateNo ?? "—")</td>
+                        <td>
+                            <form method="post" action="/Admin/UpdateEnrollmentStatus" class="d-flex gap-1">
+                                <input type="hidden" name="id" value="@e.EnrollmentId" />
+                                <select name="status" class="form-select form-select-sm" style="width:140px;"
+                                        data-current="@e.Status">
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('select[data-current]').forEach(function(sel) {
+        var current = sel.getAttribute('data-current');
+        var options = ['Записан', 'В процессе', 'Завершён', 'Отменён', 'Не явился'];
+        options.forEach(function(s) {
+            var opt = document.createElement('option');
+            opt.value = s;
+            opt.textContent = s;
+            if (s === current) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    });
+</script>
+</body>
+</html>

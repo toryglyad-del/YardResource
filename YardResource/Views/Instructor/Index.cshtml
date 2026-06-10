@@ -1,0 +1,97 @@
+﻿@model IEnumerable<YardResource.Models.Course>
+@{
+    ViewData["Title"] = "Кабинет преподавателя";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Преподаватель — ООО Ярд Ресурс</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { width: 260px; min-height: 100vh; background: #1a472a; position: fixed; top: 0; left: 0; }
+        .sidebar .logo { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .logo h5 { color: white; font-weight: 700; margin: 0; font-size: 1rem; }
+        .sidebar .logo p { color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0; }
+        .sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 20px; font-size: 0.9rem; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .topbar { background: white; padding: 16px 30px; margin: -30px -30px 30px -30px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .stat-card .number { font-size: 2rem; font-weight: 700; color: #1a472a; }
+        .stat-card .label { color: #888; font-size: 0.9rem; }
+        .course-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); height: 100%; }
+        .course-card h6 { font-weight: 700; color: #1a472a; }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo">
+        <h5>ООО «Ярд Ресурс»</h5>
+        <p>Кабинет преподавателя</p>
+    </div>
+    <nav class="mt-2">
+        <a href="/Instructor/Index" class="nav-link active"><i class="bi bi-speedometer2"></i> Главная</a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 20px;" />
+        <a href="/Account/Logout" class="nav-link"><i class="bi bi-box-arrow-left"></i> Выйти</a>
+    </nav>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h5 class="mb-0 fw-bold">Кабинет преподавателя</h5>
+        <span class="text-muted">@User.Identity?.Name</span>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="number">@ViewBag.TotalCourses</div>
+                <div class="label">Моих курсов</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="number text-primary">@ViewBag.TotalStudents</div>
+                <div class="label">Всего студентов</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="number text-success">@ViewBag.CompletedStudents</div>
+                <div class="label">Завершили курс</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Мои курсы -->
+    <h6 class="fw-bold mb-3">Мои курсы</h6>
+    <div class="row g-4">
+    @foreach (var course in Model)
+    {
+        <div class="col-md-4">
+            <div class="course-card">
+                <span class="badge bg-success bg-opacity-10 text-success mb-2" style="font-size:0.75rem;">
+                    @course.Category?.Name
+                </span>
+                <h6 class="mt-1">@course.Title</h6>
+                <p class="text-muted" style="font-size:0.85rem;">
+                    @(course.Description?.Length > 80 ? course.Description.Substring(0, 80) + "..." : course.Description)
+                </p>
+                <div style="font-size:0.82rem; color:#888;" class="mb-3">
+                    <i class="bi bi-people"></i> Записано: @course.Enrollments.Count(e => e.Status != "Отменён") / @course.MaxCapacity
+                    &nbsp; <i class="bi bi-clock"></i> @course.DurationHours ч.
+                </div>
+                <a href="/Instructor/Students/@course.CourseId" class="btn btn-sm btn-outline-success w-100">
+                    <i class="bi bi-people"></i> Студенты и оценки
+                </a>
+            </div>
+        </div>
+    }
+    </div>
+</div>
+</body>
+</html>

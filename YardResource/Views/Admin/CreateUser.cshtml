@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Добавить сотрудника";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Добавить сотрудника — ООО Ярд Ресурс</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { width: 260px; min-height: 100vh; background: #0f3460; position: fixed; top: 0; left: 0; }
+        .sidebar .logo { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .logo h5 { color: white; font-weight: 700; margin: 0; font-size: 1rem; }
+        .sidebar .logo p { color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0; }
+        .sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 20px; font-size: 0.9rem; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .topbar { background: white; padding: 16px 30px; margin: -30px -30px 30px -30px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo">
+        <h5>ООО «Ярд Ресурс»</h5>
+        <p>Панель администратора</p>
+    </div>
+    <nav class="mt-2">
+        <a href="/Admin/Index" class="nav-link"><i class="bi bi-speedometer2"></i> Дашборд</a>
+        <a href="/Admin/Users" class="nav-link active"><i class="bi bi-people"></i> Сотрудники</a>
+        <a href="/Admin/Courses" class="nav-link"><i class="bi bi-book"></i> Курсы</a>
+        <a href="/Admin/Enrollments" class="nav-link"><i class="bi bi-journal-check"></i> Записи на курсы</a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 20px;" />
+        <a href="/Account/Logout" class="nav-link"><i class="bi bi-box-arrow-left"></i> Выйти</a>
+    </nav>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h5 class="mb-0 fw-bold">Добавить сотрудника</h5>
+        <a href="/Admin/Users" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+    </div>
+    <div class="card p-4">
+        <form method="post" action="/Admin/CreateUser">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Фамилия</label>
+                    <input type="text" name="LastName" class="form-control" required placeholder="Иванов" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Имя</label>
+                    <input type="text" name="FirstName" class="form-control" required placeholder="Алексей" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Отчество</label>
+                    <input type="text" name="MiddleName" class="form-control" placeholder="Петрович" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="Email" class="form-control" required placeholder="ivanov@yardresource.ru" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Пароль</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Минимум 6 символов" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Телефон</label>
+                    <input type="text" name="Phone" class="form-control" placeholder="+7(926)000-00-00" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Роль</label>
+                    <select name="RoleId" class="form-select" required>
+                        <option value="">— Выберите роль —</option>
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <option value="@role.RoleId">@role.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Отдел</label>
+                    <select name="DepartmentId" class="form-select">
+                        <option value="">— Выберите отдел —</option>
+                        @foreach (var dep in ViewBag.Departments)
+                        {
+                            <option value="@dep.DepartmentId">@dep.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Должность</label>
+                    <select name="PositionId" class="form-select">
+                        <option value="">— Выберите должность —</option>
+                        @foreach (var pos in ViewBag.Positions)
+                        {
+                            <option value="@pos.PositionId">@pos.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-12 mt-2">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-person-plus"></i> Добавить сотрудника
+                    </button>
+                    <a href="/Admin/Users" class="btn btn-outline-secondary ms-2">Отмена</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

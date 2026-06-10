@@ -1,0 +1,184 @@
+﻿@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Админ — ООО Ярд Ресурс</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: #0f3460;
+            position: fixed;
+            top: 0; left: 0;
+        }
+        .sidebar .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar .logo h5 {
+            color: white;
+            font-weight: 700;
+            margin: 0;
+            font-size: 1rem;
+        }
+        .sidebar .logo p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.75rem;
+            margin: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 12px 20px;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f3460;
+        }
+        .stat-card .label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        .topbar {
+            background: white;
+            padding: 16px 30px;
+            margin: -30px -30px 30px -30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Боковое меню -->
+<div class="sidebar">
+    <div class="logo">
+        <h5>ООО «Ярд Ресурс»</h5>
+        <p>Панель администратора</p>
+    </div>
+    <nav class="mt-2">
+        <a href="/Admin/Index" class="nav-link active">
+            <i class="bi bi-speedometer2"></i> Дашборд
+        </a>
+        <a href="/Admin/Users" class="nav-link">
+            <i class="bi bi-people"></i> Сотрудники
+        </a>
+        <a href="/Admin/Courses" class="nav-link">
+            <i class="bi bi-book"></i> Курсы
+        </a>
+        <a href="/Admin/Enrollments" class="nav-link">
+            <i class="bi bi-journal-check"></i> Записи на курсы
+        </a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 20px;" />
+        <a href="/Account/Logout" class="nav-link">
+            <i class="bi bi-box-arrow-left"></i> Выйти
+        </a>
+    </nav>
+</div>
+
+<!-- Основной контент -->
+<div class="main-content">
+    <div class="topbar">
+        <h5 class="mb-0 fw-bold">Дашборд</h5>
+        <span class="text-muted">@User.Identity?.Name</span>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="number">@ViewBag.TotalUsers</div>
+                    <div class="label">Сотрудников</div>
+                </div>
+                <div class="icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-people"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="number">@ViewBag.TotalCourses</div>
+                    <div class="label">Активных курсов</div>
+                </div>
+                <div class="icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-book"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="number">@ViewBag.TotalEnrollments</div>
+                    <div class="label">Всего записей</div>
+                </div>
+                <div class="icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="number">@ViewBag.ActiveEnrollments</div>
+                    <div class="label">Активных записей</div>
+                </div>
+                <div class="icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <h6 class="fw-bold mb-3">Быстрые действия</h6>
+        <a href="/Admin/Courses" class="btn btn-primary me-2">
+            <i class="bi bi-plus-circle"></i> Создать курс
+        </a>
+        <a href="/Admin/Users" class="btn btn-outline-primary me-2">
+            <i class="bi bi-person-plus"></i> Добавить сотрудника
+        </a>
+        <a href="/Admin/Enrollments" class="btn btn-outline-secondary">
+            <i class="bi bi-list-check"></i> Все записи
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

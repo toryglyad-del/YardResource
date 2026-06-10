@@ -1,0 +1,104 @@
+﻿@model YardResource.Models.User
+@{
+    ViewData["Title"] = "Профиль";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Профиль — ООО Ярд Ресурс</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { width: 260px; min-height: 100vh; background: #1a3c5e; position: fixed; top: 0; left: 0; }
+        .sidebar .logo { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .logo h5 { color: white; font-weight: 700; margin: 0; font-size: 1rem; }
+        .sidebar .logo p { color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0; }
+        .sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 20px; font-size: 0.9rem; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .topbar { background: white; padding: 16px 30px; margin: -30px -30px 30px -30px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .avatar { width: 100px; height: 100px; border-radius: 50%; background: #1a3c5e; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; font-weight: 700; }
+        .info-row { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #888; font-size: 0.85rem; }
+        .info-value { font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo">
+        <h5>ООО «Ярд Ресурс»</h5>
+        <p>Личный кабинет</p>
+    </div>
+    <nav class="mt-2">
+        <a href="/Employee/Index" class="nav-link"><i class="bi bi-house"></i> Главная</a>
+        <a href="/Employee/Courses" class="nav-link"><i class="bi bi-book"></i> Курсы</a>
+        <a href="/Employee/MyCourses" class="nav-link"><i class="bi bi-journal-check"></i> Мои курсы</a>
+        <a href="/Employee/Schedule" class="nav-link"><i class="bi bi-calendar3"></i> Расписание</a>
+        <a href="/Employee/Notifications" class="nav-link"><i class="bi bi-bell"></i> Уведомления</a>
+        <a href="/Employee/Profile" class="nav-link active"><i class="bi bi-person"></i> Профиль</a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 20px;" />
+        <a href="/Account/Logout" class="nav-link"><i class="bi bi-box-arrow-left"></i> Выйти</a>
+    </nav>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <h5 class="mb-0 fw-bold">Мой профиль</h5>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card p-4 text-center">
+                <div class="avatar mx-auto mb-3">
+                    @(Model?.FirstName?.Substring(0, 1))@(Model?.LastName?.Substring(0, 1))
+                </div>
+                <h5 class="fw-bold">@Model?.FullName</h5>
+                <p class="text-muted mb-1">@(Model?.Position?.Name ?? "—")</p>
+                <p class="text-muted">@(Model?.Department?.Name ?? "—")</p>
+                <span class="badge bg-primary">@Model?.Role?.Name</span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h6 class="fw-bold mb-3">Личные данные</h6>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Фамилия</div>
+                    <div class="col-8 info-value">@Model?.LastName</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Имя</div>
+                    <div class="col-8 info-value">@Model?.FirstName</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Отчество</div>
+                    <div class="col-8 info-value">@(Model?.MiddleName ?? "—")</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Email</div>
+                    <div class="col-8 info-value">@Model?.Email</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Телефон</div>
+                    <div class="col-8 info-value">@(Model?.Phone ?? "—")</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Дата приёма</div>
+                    <div class="col-8 info-value">@Model?.HireDate.ToString("dd.MM.yyyy")</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Отдел</div>
+                    <div class="col-8 info-value">@(Model?.Department?.Name ?? "—")</div>
+                </div>
+                <div class="info-row row">
+                    <div class="col-4 info-label">Должность</div>
+                    <div class="col-8 info-value">@(Model?.Position?.Name ?? "—")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
